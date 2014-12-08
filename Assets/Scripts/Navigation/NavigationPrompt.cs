@@ -6,7 +6,9 @@ public class NavigationPrompt : MonoBehaviour {
 	public bool showDialog;
 
 	void OnCollisionEnter2D(Collision2D col) {
-		showDialog = true;
+		if(NavigationManager.CanNavigate(this.tag)){
+			showDialog = true;
+		}
 	}
 
 	void OnCollisionExit2D(Collision2D col){
@@ -21,16 +23,13 @@ public class NavigationPrompt : MonoBehaviour {
 			//the menu background box
 			GUI.Box (new Rect(0, 0, 300, 250), "");
 
-			//Information text
-			GUI.Label (new Rect(15, 10, 300, 68), "Do you want to travel to " + this.tag + "?");
+			//Dialog Detail -- updated to get better detail
+			GUI.Label (new Rect(15, 10, 300, 68), "Do you want to travel to " + NavigationManager.GetRouteInfo (this.tag) + "?");
 
 			//Player wants to leave this location
 			if (GUI.Button (new Rect(55, 100, 180, 40), "Travel")){
 				showDialog = false;
-
-				//The following line is commented out for now as
-				//we have nowhere to go
-				//Application.LoadLevel(1);
+				NavigationManager.NavigateTo (this.tag);
 			}
 
 			//Player wants to stay at this location
